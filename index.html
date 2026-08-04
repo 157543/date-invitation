@@ -1,380 +1,1358 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Will you go on a date with me?</title>
-  <style>
-    :root {
-      --pink: #ff5f8f;
-      --pink-dark: #e64074;
-      --cream: #fff8f5;
-      --text: #2b2530;
-    }
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <meta name="theme-color" content="#fff1f6">
+  <title>我们的约会计划</title>
 
+  <style>
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
-      width: 100%;
+    :root {
+      --pink: #ed4279;
+      --light-pink: #ffe1ec;
+      --text: #332932;
+      --muted: #786b74;
+    }
+
+    html,
+    body {
       min-height: 100%;
       margin: 0;
     }
 
     body {
       min-height: 100svh;
-      overflow: hidden;
-      font-family: ui-rounded, "SF Pro Rounded", "PingFang SC",
-        "Microsoft YaHei", system-ui, sans-serif;
+      overflow-x: hidden;
+      font-family:
+        "PingFang SC",
+        "Microsoft YaHei",
+        system-ui,
+        sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 20% 15%, #ffd8e7 0 7%, transparent 25%),
-        radial-gradient(circle at 85% 80%, #ffc5dc 0 8%, transparent 28%),
-        linear-gradient(145deg, #fff6f9, #ffe5ee);
+        radial-gradient(circle at 15% 10%, #ffd4e3, transparent 28%),
+        radial-gradient(circle at 90% 85%, #ffc5da, transparent 32%),
+        linear-gradient(145deg, #fff9fb, #ffe7f0);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .page {
+      min-height: 100svh;
       display: grid;
       place-items: center;
+      padding:
+        max(18px, env(safe-area-inset-top))
+        18px
+        max(18px, env(safe-area-inset-bottom));
+    }
+
+    .card {
+      position: relative;
+      width: min(94vw, 560px);
+      min-height: 660px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow:
+        0 28px 80px rgba(128, 37, 73, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+
+    .progress {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      padding: 20px 22px 0;
+    }
+
+    .progress span {
+      height: 5px;
+      border-radius: 999px;
+      background: #eadde2;
+      transition: 0.25s;
+    }
+
+    .progress span.active {
+      background: linear-gradient(90deg, #ff79a5, #e83d74);
+    }
+
+    .screen {
+      display: none;
+      min-height: 610px;
+      padding: 20px 24px 30px;
+      text-align: center;
+      animation: appear 0.35s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: #a52f59;
+      background: var(--light-pink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .photo {
+      display: block;
+      width: 180px;
+      height: 180px;
+      margin: 22px auto 14px;
+      border: 9px solid rgba(255, 255, 255, 0.75);
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ffe1ec;
+      box-shadow: 0 16px 36px rgba(146, 42, 82, 0.18);
+      animation: float 2.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-1deg);
+      }
+
+      50% {
+        transform: translateY(-7px) rotate(1deg);
+      }
+    }
+
+    h1,
+    h2 {
+      margin: 10px 0 8px;
+      letter-spacing: -0.04em;
+    }
+
+    h1 {
+      font-size: clamp(32px, 8vw, 46px);
+      line-height: 1.08;
+    }
+
+    h2 {
+      font-size: clamp(29px, 7vw, 40px);
+    }
+
+    .subtitle {
+      max-width: 430px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .icon-box {
+      width: 115px;
+      height: 115px;
+      display: grid;
+      place-items: center;
+      margin: 32px auto 16px;
+      border-radius: 32px;
+      background: linear-gradient(145deg, #ffffff, #ffe1ec);
+      box-shadow: 0 16px 38px rgba(138, 39, 78, 0.13);
+      font-size: 58px;
+    }
+
+    .primary,
+    .secondary,
+    .nav-button {
+      min-height: 56px;
+      border-radius: 18px;
+      font-weight: 850;
+      transition:
+        transform 0.18s ease,
+        opacity 0.18s ease,
+        box-shadow 0.18s ease;
+    }
+
+    .primary {
+      color: white;
+      background: linear-gradient(135deg, #ff75a3, #e83c73);
+      box-shadow: 0 13px 30px rgba(232, 59, 114, 0.3);
+    }
+
+    .secondary {
+      color: #655b63;
+      background: #f2ecef;
+      box-shadow: 0 10px 24px rgba(72, 48, 62, 0.09);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .buttons-zone {
+      position: relative;
+      height: 185px;
+      margin-top: 24px;
+    }
+
+    #yesButton {
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      width: 138px;
+      transform: translateX(-112%);
+    }
+
+    #noButton {
+      position: absolute;
+      top: 22px;
+      left: calc(50% + 10px);
+      width: 126px;
+      transition:
+        left 0.16s ease,
+        top 0.16s ease,
+        transform 0.16s ease;
+    }
+
+    .hint {
+      position: absolute;
+      right: 0;
+      bottom: 14px;
+      left: 0;
+      color: #aa909b;
+      font-size: 13px;
+    }
+
+    .field {
+      margin-top: 26px;
+      text-align: left;
+    }
+
+    .field label {
+      display: block;
+      margin: 0 0 9px 4px;
+      color: #665c64;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    input[type="date"],
+    input[type="time"] {
+      width: 100%;
+      min-height: 60px;
+      padding: 0 17px;
+      border: 1.5px solid rgba(224, 76, 126, 0.18);
+      border-radius: 18px;
+      outline: none;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 26px rgba(111, 45, 72, 0.07);
+      font-size: 17px;
+    }
+
+    input:focus {
+      border-color: rgba(230, 59, 115, 0.55);
+      box-shadow: 0 0 0 4px rgba(255, 95, 143, 0.11);
+    }
+
+    .quick-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .quick-button {
+      min-height: 48px;
+      border-radius: 15px;
+      color: #6f5e67;
+      background: #f7eef2;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .quick-button.selected {
+      color: #b52d5e;
+      background: #ffe1ec;
+      box-shadow: inset 0 0 0 1.5px #f06a97;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .option {
+      min-height: 88px;
+      padding: 12px;
+      border: 1.5px solid transparent;
+      border-radius: 20px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 11px 25px rgba(112, 44, 72, 0.08);
+      transition: 0.18s ease;
+    }
+
+    .option span:first-child {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 30px;
+    }
+
+    .option span:last-child {
+      display: block;
+      font-size: 15px;
+      font-weight: 850;
+    }
+
+    .option.selected {
+      border-color: #ef5a8c;
+      background: #fff0f5;
+      box-shadow: 0 12px 30px rgba(232, 59, 114, 0.17);
+    }
+
+    .navigation {
+      display: grid;
+      grid-template-columns: 0.8fr 1.3fr;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .nav-button {
+      width: 100%;
+    }
+
+    .next-button {
+      color: white;
+      background: linear-gradient(135deg, #ff74a2, #e73c73);
+      box-shadow: 0 12px 29px rgba(232, 59, 114, 0.27);
+    }
+
+    .next-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .summary {
+      margin-top: 24px;
       padding: 20px;
+      border: 1px solid rgba(226, 73, 124, 0.14);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 14px 34px rgba(105, 43, 69, 0.09);
+      text-align: left;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 1px dashed #eadce2;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: #ffe6ef;
+      font-size: 20px;
+    }
+
+    .summary-row small {
+      display: block;
+      margin-bottom: 4px;
+      color: #a08d96;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .summary-row strong {
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .final-buttons {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .message {
+      min-height: 24px;
+      margin-top: 10px;
+      color: #c03266;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .celebration {
+      margin-top: 18px;
+      font-size: 88px;
+      animation: celebrate 0.9s ease-in-out infinite alternate;
+    }
+
+    @keyframes celebrate {
+      from {
+        transform: rotate(-6deg) scale(1);
+      }
+
+      to {
+        transform: rotate(6deg) scale(1.08);
+      }
     }
 
     .floating-heart {
       position: fixed;
-      bottom: -60px;
-      opacity: .28;
+      bottom: -50px;
+      opacity: 0.24;
       pointer-events: none;
       animation: rise linear infinite;
       user-select: none;
     }
 
     @keyframes rise {
-      from { transform: translateY(0) rotate(0deg) scale(.8); }
-      to   { transform: translateY(-120vh) rotate(35deg) scale(1.15); }
-    }
-
-    .card {
-      position: relative;
-      width: min(92vw, 520px);
-      min-height: 580px;
-      padding: 34px 26px 30px;
-      border: 1px solid rgba(255,255,255,.85);
-      border-radius: 34px;
-      background: rgba(255,255,255,.76);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow:
-        0 30px 80px rgba(127, 40, 77, .18),
-        inset 0 1px 0 rgba(255,255,255,.95);
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #a42f5a;
-      background: #ffe1ec;
-    }
-
-    .illustration {
-      width: 180px;
-      height: 180px;
-      margin: 22px auto 12px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #ffeaf2, #ffd0df);
-      box-shadow: inset 0 0 0 10px rgba(255,255,255,.45);
-      font-size: 88px;
-      animation: bob 2.4s ease-in-out infinite;
-    }
-
-    @keyframes bob {
-      0%, 100% { transform: translateY(0) rotate(-2deg); }
-      50%      { transform: translateY(-8px) rotate(2deg); }
-    }
-
-    h1 {
-      margin: 10px 0 8px;
-      font-size: clamp(30px, 7vw, 44px);
-      line-height: 1.06;
-      letter-spacing: -.04em;
-    }
-
-    .subtitle {
-      margin: 0 auto;
-      max-width: 390px;
-      color: #756a76;
-      font-size: 16px;
-      line-height: 1.65;
-    }
-
-    .buttons-zone {
-      position: relative;
-      width: 100%;
-      height: 170px;
-      margin-top: 22px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 18px;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      touch-action: manipulation;
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-
-    button:active {
-      transform: scale(.96);
-    }
-
-    #yesBtn {
-      position: absolute;
-      left: 50%;
-      top: 20px;
-      transform: translateX(-115%);
-      width: 132px;
-      height: 58px;
-      color: white;
-      background: linear-gradient(135deg, #ff6e9f, #ee3f78);
-      box-shadow: 0 12px 30px rgba(238, 63, 120, .30);
-    }
-
-    #yesBtn:hover {
-      box-shadow: 0 16px 36px rgba(238, 63, 120, .42);
-    }
-
-    #noBtn {
-      position: absolute;
-      left: calc(50% + 10px);
-      top: 20px;
-      width: 132px;
-      height: 58px;
-      color: #5f5560;
-      background: #f2edf0;
-      box-shadow: 0 10px 24px rgba(72, 48, 62, .10);
-      transition: left .18s ease, top .18s ease, transform .18s ease;
-    }
-
-    .hint {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 8px;
-      font-size: 13px;
-      color: #aa8f9a;
-    }
-
-    .success {
-      display: none;
-      position: absolute;
-      inset: 0;
-      padding: 40px 28px;
-      background:
-        radial-gradient(circle at 50% 30%, rgba(255,255,255,.9), transparent 45%),
-        linear-gradient(145deg, #fff3f8, #ffd7e5);
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      z-index: 10;
-    }
-
-    .success.show {
-      display: flex;
-      animation: reveal .45s cubic-bezier(.2,.9,.2,1);
-    }
-
-    @keyframes reveal {
-      from { opacity: 0; transform: scale(.92); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    .success .emoji {
-      font-size: 104px;
-      animation: celebrate .9s ease-in-out infinite alternate;
-    }
-
-    @keyframes celebrate {
-      from { transform: rotate(-6deg) scale(1); }
-      to   { transform: rotate(6deg) scale(1.08); }
-    }
-
-    .success h2 {
-      margin: 18px 0 8px;
-      font-size: clamp(34px, 8vw, 52px);
-      color: #d92f69;
-    }
-
-    .success p {
-      margin: 0;
-      color: #6f5e68;
-      font-size: 17px;
-      line-height: 1.7;
+      to {
+        transform: translateY(-120vh) rotate(30deg);
+      }
     }
 
     .confetti {
       position: fixed;
-      top: -20px;
-      z-index: 99;
+      top: -25px;
+      z-index: 999;
       pointer-events: none;
       animation: fall linear forwards;
     }
 
     @keyframes fall {
       to {
-        transform: translate3d(var(--drift), 110vh, 0) rotate(720deg);
-        opacity: .2;
+        transform:
+          translate3d(var(--drift), 110vh, 0)
+          rotate(720deg);
+        opacity: 0.15;
       }
     }
 
-    @media (max-width: 420px) {
+    @media (max-width: 430px) {
       .card {
-        min-height: 550px;
-        padding-inline: 18px;
+        min-height: 640px;
+        border-radius: 27px;
       }
 
-      .illustration {
-        width: 155px;
-        height: 155px;
-        font-size: 74px;
+      .screen {
+        min-height: 590px;
+        padding-right: 18px;
+        padding-left: 18px;
       }
 
-      #yesBtn, #noBtn {
-        width: 118px;
+      .photo {
+        width: 158px;
+        height: 158px;
+      }
+
+      .options {
+        gap: 10px;
       }
     }
-
-.illustration.photo {
-  display: block;
-  object-fit: cover;
-  padding: 0;
-}
-    
   </style>
 </head>
 
 <body>
-  <main class="card" id="card">
-    <div class="badge">💌 我有一个问题想问你</div>
+  <div class="page">
+    <main class="card">
 
-    <!-- 这里可以换成你们的照片：把下面 div 改成 <img src="photo.jpg"> -->
-    <img class="illustration" src="FullSizeRender.jpeg" alt="照片">
+      <div class="progress">
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
-    <h1>愿意和我约会吗？</h1>
-    <p class="subtitle">
-      我认真想了很久，还是觉得应该亲口问你。<br>
-      所以……你的答案是？
-    </p>
+      <!-- 第一步：询问 -->
+      <section class="screen active">
+        <div class="badge">💌 我有一个问题想问你</div>
 
-    <section class="buttons-zone" id="zone">
-      <button id="yesBtn" type="button">当然愿意 💗(喵～）</button>
-      <button id="noBtn" type="button">不要 我是狗</button>
-      <div class="hint">提示：第二个按钮好像有自己的想法</div>
-    </section>
+        <img
+          class="photo"
+          src="FullSizeRender.jpeg"
+          alt="我们的照片"
+        >
 
-    <section class="success" id="success" aria-live="polite">
-      <div class="emoji">🥰</div>
-      <h2>你真的答应了！</h2>
-      <p>
-        那就说定啦 💕<br>
-        时间和地点，我来认真安排。
-      </p>
-    </section>
-  </main>
+        <h1>愿意和我约会吗？</h1>
+
+        <p class="subtitle">
+          我认真想了很久，还是觉得应该亲口问你。<br>
+          所以……你的答案是？
+        </p>
+
+        <div class="buttons-zone" id="buttonsZone">
+          <button
+            class="primary"
+            id="yesButton"
+            type="button"
+          >
+            当然愿意 💗我是你的小猫咪～
+          </button>
+
+          <button
+            class="secondary"
+            id="noButton"
+            type="button"
+          >
+            不要
+          </button>
+
+          <div class="hint">
+            提示：第二个按钮好像有自己的想法
+          </div>
+        </div>
+      </section>
+
+      <!-- 第二步：日期 -->
+      <section class="screen">
+        <div class="icon-box">📅</div>
+
+        <h2>哪一天见面？</h2>
+
+        <p class="subtitle">
+          选一个你比较方便，也值得期待的日子。
+        </p>
+
+        <div class="field">
+          <label for="dateInput">选择日期</label>
+          <input id="dateInput" type="date">
+
+          <div class="quick-options">
+            <button
+              class="quick-button"
+              type="button"
+              data-day="1"
+            >
+              明天
+            </button>
+
+            <button
+              class="quick-button"
+              type="button"
+              data-day="3"
+            >
+              三天后
+            </button>
+
+            <button
+              class="quick-button"
+              type="button"
+              data-day="7"
+            >
+              下周
+            </button>
+          </div>
+        </div>
+
+        <div class="navigation">
+          <button
+            class="secondary nav-button back"
+            type="button"
+          >
+            返回
+          </button>
+
+          <button
+            class="next-button nav-button"
+            id="dateNext"
+            type="button"
+            disabled
+          >
+            选好了
+          </button>
+        </div>
+      </section>
+
+      <!-- 第三步：时间 -->
+      <section class="screen">
+        <div class="icon-box">🕰️</div>
+
+        <h2>几点出发？</h2>
+
+        <p class="subtitle">
+          可以选常用时间，也可以自己精确填写。
+        </p>
+
+        <div class="options" id="timeOptions">
+          <button
+            class="option"
+            type="button"
+            data-value="11:30"
+          >
+            <span>☀️</span>
+            <span>午餐 · 11:30</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="14:30"
+          >
+            <span>🧋</span>
+            <span>下午 · 14:30</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="18:30"
+          >
+            <span>🌆</span>
+            <span>晚餐 · 18:30</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="20:00"
+          >
+            <span>🌙</span>
+            <span>晚上 · 20:00</span>
+          </button>
+        </div>
+
+        <div class="field">
+          <label for="timeInput">或者自定义时间</label>
+          <input id="timeInput" type="time">
+        </div>
+
+        <div class="navigation">
+          <button
+            class="secondary nav-button back"
+            type="button"
+          >
+            返回
+          </button>
+
+          <button
+            class="next-button nav-button"
+            id="timeNext"
+            type="button"
+            disabled
+          >
+            下一步
+          </button>
+        </div>
+      </section>
+
+      <!-- 第四步：食物 -->
+      <section class="screen">
+        <div class="icon-box">🍽️</div>
+
+        <h2>我们吃什么？</h2>
+
+        <p class="subtitle">
+          先选一个大方向，具体餐厅之后再一起决定。
+        </p>
+
+        <div class="options" id="foodOptions">
+          <button
+            class="option"
+            type="button"
+            data-value="火锅"
+          >
+            <span>🍲</span>
+            <span>火锅</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="烤肉"
+          >
+            <span>🥩</span>
+            <span>烤肉</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="日料"
+          >
+            <span>🍣</span>
+            <span>日料</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="西餐"
+          >
+            <span>🍝</span>
+            <span>西餐</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="甜品和咖啡"
+          >
+            <span>🍰</span>
+            <span>甜品咖啡</span>
+          </button>
+
+          <button
+            class="option"
+            type="button"
+            data-value="你来决定"
+          >
+            <span>🎁</span>
+            <span>你来决定</span>
+          </button>
+        </div>
+
+        <div class="navigation">
+          <button
+            class="secondary nav-button back"
+            type="button"
+          >
+            返回
+          </button>
+
+          <button
+            class="next-button nav-button"
+            id="foodNext"
+            type="button"
+            disabled
+          >
+            生成计划
+          </button>
+        </div>
+      </section>
+
+      <!-- 第五步：结果 -->
+      <section class="screen">
+        <div class="celebration">🥰</div>
+
+        <h2>约会计划完成！</h2>
+
+        <p class="subtitle">
+          这是我们刚刚一起选好的安排。
+        </p>
+
+        <div class="summary">
+          <div class="summary-row">
+            <div class="summary-icon">📅</div>
+
+            <div>
+              <small>日期</small>
+              <strong id="summaryDate">—</strong>
+            </div>
+          </div>
+
+          <div class="summary-row">
+            <div class="summary-icon">🕰️</div>
+
+            <div>
+              <small>时间</small>
+              <strong id="summaryTime">—</strong>
+            </div>
+          </div>
+
+          <div class="summary-row">
+            <div class="summary-icon">🍽️</div>
+
+            <div>
+              <small>吃什么</small>
+              <strong id="summaryFood">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="final-buttons">
+          <button
+            class="primary nav-button"
+            id="copyButton"
+            type="button"
+          >
+            复制约会计划 💌
+          </button>
+
+          <button
+            class="secondary nav-button"
+            id="restartButton"
+            type="button"
+          >
+            重新选择
+          </button>
+        </div>
+
+        <div class="message" id="copyMessage"></div>
+      </section>
+
+    </main>
+  </div>
 
   <script>
-    const card = document.getElementById("card");
-    const zone = document.getElementById("zone");
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const success = document.getElementById("success");
+    const screens = Array.from(
+      document.querySelectorAll(".screen")
+    );
 
-    let dodgeCount = 0;
+    const progressBars = Array.from(
+      document.querySelectorAll(".progress span")
+    );
+
+    const plan = {
+      date: "",
+      time: "",
+      food: ""
+    };
+
+    function showStep(step) {
+      screens.forEach((screen, index) => {
+        screen.classList.toggle(
+          "active",
+          index === step
+        );
+      });
+
+      progressBars.forEach((bar, index) => {
+        bar.classList.toggle(
+          "active",
+          index <= step
+        );
+      });
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    /* 不要按钮逃跑 */
+
+    const buttonsZone =
+      document.getElementById("buttonsZone");
+
+    const yesButton =
+      document.getElementById("yesButton");
+
+    const noButton =
+      document.getElementById("noButton");
+
+    let escapeCount = 0;
 
     function moveNoButton() {
-      const zoneRect = zone.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+      const zoneWidth = buttonsZone.clientWidth;
+      const zoneHeight = buttonsZone.clientHeight;
+      const buttonWidth = noButton.offsetWidth;
+      const buttonHeight = noButton.offsetHeight;
 
-      const padding = 8;
-      const maxX = Math.max(padding, zoneRect.width - btnRect.width - padding);
-      const maxY = Math.max(padding, zoneRect.height - btnRect.height - 30);
+      const maximumLeft =
+        zoneWidth - buttonWidth - 8;
 
-      let x = padding + Math.random() * (maxX - padding);
-      let y = padding + Math.random() * (maxY - padding);
+      const maximumTop =
+        zoneHeight - buttonHeight - 28;
 
-      // 尽量别盖住 Yes 按钮所在的中间区域
-      if (y < 85 && x > zoneRect.width * 0.20 && x < zoneRect.width * 0.67) {
-        y = 95 + Math.random() * Math.max(10, maxY - 95);
-      }
+      const newLeft =
+        8 + Math.random() * Math.max(
+          1,
+          maximumLeft - 8
+        );
 
-      noBtn.style.left = `${x}px`;
-      noBtn.style.top = `${y}px`;
+      const newTop =
+        8 + Math.random() * Math.max(
+          1,
+          maximumTop - 8
+        );
 
-      dodgeCount += 1;
-      const texts = [
+      noButton.style.left = `${newLeft}px`;
+      noButton.style.top = `${newTop}px`;
+
+      escapeCount += 1;
+
+      const messages = [
         "不要",
         "再想想嘛",
         "你确定？",
         "真的不选我？",
         "抓不到我 😝"
       ];
-      noBtn.textContent = texts[Math.min(dodgeCount, texts.length - 1)];
 
-      // 对方点得越多，Yes 按钮就越大一点
-      const scale = Math.min(1 + dodgeCount * 0.07, 1.45);
-      yesBtn.style.transform = `translateX(-115%) scale(${scale})`;
+      noButton.textContent =
+        messages[
+          Math.min(
+            escapeCount,
+            messages.length - 1
+          )
+        ];
+
+      const scale = Math.min(
+        1 + escapeCount * 0.06,
+        1.35
+      );
+
+      yesButton.style.transform =
+        `translateX(-112%) scale(${scale})`;
     }
 
-    // 电脑：鼠标靠近就逃跑
-    noBtn.addEventListener("mouseenter", moveNoButton);
-    noBtn.addEventListener("pointerdown", (event) => {
-      event.preventDefault();
-      moveNoButton();
+    noButton.addEventListener(
+      "pointerenter",
+      moveNoButton
+    );
+
+    noButton.addEventListener(
+      "pointerdown",
+      event => {
+        event.preventDefault();
+        moveNoButton();
+      }
+    );
+
+    yesButton.addEventListener(
+      "click",
+      () => {
+        showStep(1);
+        makeConfetti(35);
+      }
+    );
+
+    /* 返回按钮 */
+
+    document
+      .querySelectorAll(".back")
+      .forEach(button => {
+        button.addEventListener(
+          "click",
+          () => {
+            const currentStep =
+              screens.findIndex(
+                screen =>
+                  screen.classList.contains(
+                    "active"
+                  )
+              );
+
+            showStep(
+              Math.max(0, currentStep - 1)
+            );
+          }
+        );
+      });
+
+    /* 日期 */
+
+    const dateInput =
+      document.getElementById("dateInput");
+
+    const dateNext =
+      document.getElementById("dateNext");
+
+    const quickDateButtons = Array.from(
+      document.querySelectorAll("[data-day]")
+    );
+
+    const now = new Date();
+
+    const todayValue =
+      new Date(
+        now.getTime() -
+        now.getTimezoneOffset() * 60000
+      )
+      .toISOString()
+      .split("T")[0];
+
+    dateInput.min = todayValue;
+
+    function formatInputDate(date) {
+      return new Date(
+        date.getTime() -
+        date.getTimezoneOffset() * 60000
+      )
+      .toISOString()
+      .split("T")[0];
+    }
+
+    function selectDate(value) {
+      plan.date = value;
+      dateInput.value = value;
+      dateNext.disabled = !value;
+
+      quickDateButtons.forEach(button => {
+        const date = new Date();
+
+        date.setDate(
+          date.getDate() +
+          Number(button.dataset.day)
+        );
+
+        button.classList.toggle(
+          "selected",
+          formatInputDate(date) === value
+        );
+      });
+    }
+
+    quickDateButtons.forEach(button => {
+      button.addEventListener(
+        "click",
+        () => {
+          const date = new Date();
+
+          date.setDate(
+            date.getDate() +
+            Number(button.dataset.day)
+          );
+
+          selectDate(formatInputDate(date));
+        }
+      );
     });
 
-    // 手机：手指接触前/接触时逃跑
-    noBtn.addEventListener("touchstart", (event) => {
-      event.preventDefault();
-      moveNoButton();
-    }, { passive: false });
+    dateInput.addEventListener(
+      "change",
+      () => selectDate(dateInput.value)
+    );
 
-    yesBtn.addEventListener("click", () => {
-      success.classList.add("show");
-      launchConfetti();
+    dateNext.addEventListener(
+      "click",
+      () => showStep(2)
+    );
+
+    /* 时间 */
+
+    const timeInput =
+      document.getElementById("timeInput");
+
+    const timeNext =
+      document.getElementById("timeNext");
+
+    const timeOptions = Array.from(
+      document.querySelectorAll(
+        "#timeOptions .option"
+      )
+    );
+
+    function selectTime(value) {
+      plan.time = value;
+      timeInput.value = value;
+      timeNext.disabled = !value;
+
+      timeOptions.forEach(option => {
+        option.classList.toggle(
+          "selected",
+          option.dataset.value === value
+        );
+      });
+    }
+
+    timeOptions.forEach(option => {
+      option.addEventListener(
+        "click",
+        () => {
+          selectTime(option.dataset.value);
+        }
+      );
     });
 
-    function launchConfetti() {
-      const pieces = ["💗", "💖", "💕", "✨", "🌸"];
-      for (let i = 0; i < 80; i++) {
-        const item = document.createElement("span");
-        item.className = "confetti";
-        item.textContent = pieces[Math.floor(Math.random() * pieces.length)];
-        item.style.left = `${Math.random() * 100}vw`;
-        item.style.fontSize = `${14 + Math.random() * 20}px`;
-        item.style.animationDuration = `${2.4 + Math.random() * 2.4}s`;
-        item.style.animationDelay = `${Math.random() * 0.7}s`;
-        item.style.setProperty("--drift", `${-100 + Math.random() * 200}px`);
-        document.body.appendChild(item);
-        setTimeout(() => item.remove(), 5600);
+    timeInput.addEventListener(
+      "change",
+      () => selectTime(timeInput.value)
+    );
+
+    timeNext.addEventListener(
+      "click",
+      () => showStep(3)
+    );
+
+    /* 食物 */
+
+    const foodNext =
+      document.getElementById("foodNext");
+
+    const foodOptions = Array.from(
+      document.querySelectorAll(
+        "#foodOptions .option"
+      )
+    );
+
+    foodOptions.forEach(option => {
+      option.addEventListener(
+        "click",
+        () => {
+          plan.food = option.dataset.value;
+
+          foodOptions.forEach(item => {
+            item.classList.toggle(
+              "selected",
+              item === option
+            );
+          });
+
+          foodNext.disabled = false;
+        }
+      );
+    });
+
+    foodNext.addEventListener(
+      "click",
+      () => {
+        displaySummary();
+        showStep(4);
+        makeConfetti(80);
+      }
+    );
+
+    /* 结果 */
+
+    const summaryDate =
+      document.getElementById("summaryDate");
+
+    const summaryTime =
+      document.getElementById("summaryTime");
+
+    const summaryFood =
+      document.getElementById("summaryFood");
+
+    const copyButton =
+      document.getElementById("copyButton");
+
+    const copyMessage =
+      document.getElementById("copyMessage");
+
+    const restartButton =
+      document.getElementById("restartButton");
+
+    function readableDate(value) {
+      if (!value) {
+        return "未选择";
+      }
+
+      const date =
+        new Date(`${value}T00:00:00`);
+
+      return new Intl.DateTimeFormat(
+        "zh-CN",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          weekday: "long"
+        }
+      ).format(date);
+    }
+
+    function displaySummary() {
+      summaryDate.textContent =
+        readableDate(plan.date);
+
+      summaryTime.textContent =
+        plan.time || "未选择";
+
+      summaryFood.textContent =
+        plan.food || "未选择";
+    }
+
+    function createPlanText() {
+      return [
+        "💌 我们的约会计划",
+        `📅 日期：${readableDate(plan.date)}`,
+        `🕰️ 时间：${plan.time}`,
+        `🍽️ 吃什么：${plan.food}`,
+        "",
+        "说好了，不许反悔 💗"
+      ].join("\n");
+    }
+
+    copyButton.addEventListener(
+      "click",
+      async () => {
+        const text = createPlanText();
+
+        try {
+          await navigator.clipboard.writeText(
+            text
+          );
+
+          copyMessage.textContent =
+            "已经复制，可以直接发给对方啦 💕";
+        } catch (error) {
+          const textarea =
+            document.createElement("textarea");
+
+          textarea.value = text;
+
+          document.body.appendChild(
+            textarea
+          );
+
+          textarea.select();
+
+          document.execCommand("copy");
+
+          textarea.remove();
+
+          copyMessage.textContent =
+            "已经复制，可以直接发给对方啦 💕";
+        }
+      }
+    );
+
+    restartButton.addEventListener(
+      "click",
+      () => {
+        plan.date = "";
+        plan.time = "";
+        plan.food = "";
+
+        dateInput.value = "";
+        timeInput.value = "";
+
+        dateNext.disabled = true;
+        timeNext.disabled = true;
+        foodNext.disabled = true;
+
+        copyMessage.textContent = "";
+
+        document
+          .querySelectorAll(".selected")
+          .forEach(element => {
+            element.classList.remove(
+              "selected"
+            );
+          });
+
+        noButton.style.left =
+          "calc(50% + 10px)";
+
+        noButton.style.top = "22px";
+        noButton.textContent = "不要";
+
+        yesButton.style.transform =
+          "translateX(-112%)";
+
+        escapeCount = 0;
+
+        showStep(0);
+      }
+    );
+
+    /* 爱心和彩带 */
+
+    function makeConfetti(amount) {
+      const pieces = [
+        "💗",
+        "💖",
+        "💕",
+        "✨",
+        "🌸"
+      ];
+
+      for (
+        let index = 0;
+        index < amount;
+        index += 1
+      ) {
+        const piece =
+          document.createElement("span");
+
+        piece.className = "confetti";
+
+        piece.textContent =
+          pieces[
+            Math.floor(
+              Math.random() * pieces.length
+            )
+          ];
+
+        piece.style.left =
+          `${Math.random() * 100}vw`;
+
+        piece.style.fontSize =
+          `${14 + Math.random() * 20}px`;
+
+        piece.style.animationDuration =
+          `${2.4 + Math.random() * 2.4}s`;
+
+        piece.style.animationDelay =
+          `${Math.random() * 0.7}s`;
+
+        piece.style.setProperty(
+          "--drift",
+          `${-100 + Math.random() * 200}px`
+        );
+
+        document.body.appendChild(piece);
+
+        setTimeout(
+          () => piece.remove(),
+          5600
+        );
       }
     }
 
-    // 背景漂浮爱心
-    for (let i = 0; i < 14; i++) {
-      const heart = document.createElement("span");
+    for (
+      let index = 0;
+      index < 14;
+      index += 1
+    ) {
+      const heart =
+        document.createElement("span");
+
       heart.className = "floating-heart";
-      heart.textContent = Math.random() > .5 ? "♡" : "♥";
-      heart.style.left = `${Math.random() * 100}vw`;
-      heart.style.fontSize = `${18 + Math.random() * 34}px`;
-      heart.style.animationDuration = `${8 + Math.random() * 8}s`;
-      heart.style.animationDelay = `${-Math.random() * 12}s`;
+
+      heart.textContent =
+        Math.random() > 0.5 ? "♡" : "♥";
+
+      heart.style.left =
+        `${Math.random() * 100}vw`;
+
+      heart.style.fontSize =
+        `${18 + Math.random() * 34}px`;
+
+      heart.style.animationDuration =
+        `${8 + Math.random() * 8}s`;
+
+      heart.style.animationDelay =
+        `${-Math.random() * 12}s`;
+
       document.body.appendChild(heart);
     }
   </script>
