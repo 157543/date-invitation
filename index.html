@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Will you go on a date with me?</title>
+  <style>
+    :root {
+      --pink: #ff5f8f;
+      --pink-dark: #e64074;
+      --cream: #fff8f5;
+      --text: #2b2530;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100svh;
+      overflow: hidden;
+      font-family: ui-rounded, "SF Pro Rounded", "PingFang SC",
+        "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 15%, #ffd8e7 0 7%, transparent 25%),
+        radial-gradient(circle at 85% 80%, #ffc5dc 0 8%, transparent 28%),
+        linear-gradient(145deg, #fff6f9, #ffe5ee);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .floating-heart {
+      position: fixed;
+      bottom: -60px;
+      opacity: .28;
+      pointer-events: none;
+      animation: rise linear infinite;
+      user-select: none;
+    }
+
+    @keyframes rise {
+      from { transform: translateY(0) rotate(0deg) scale(.8); }
+      to   { transform: translateY(-120vh) rotate(35deg) scale(1.15); }
+    }
+
+    .card {
+      position: relative;
+      width: min(92vw, 520px);
+      min-height: 580px;
+      padding: 34px 26px 30px;
+      border: 1px solid rgba(255,255,255,.85);
+      border-radius: 34px;
+      background: rgba(255,255,255,.76);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow:
+        0 30px 80px rgba(127, 40, 77, .18),
+        inset 0 1px 0 rgba(255,255,255,.95);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #a42f5a;
+      background: #ffe1ec;
+    }
+
+    .illustration {
+      width: 180px;
+      height: 180px;
+      margin: 22px auto 12px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #ffeaf2, #ffd0df);
+      box-shadow: inset 0 0 0 10px rgba(255,255,255,.45);
+      font-size: 88px;
+      animation: bob 2.4s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50%      { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    h1 {
+      margin: 10px 0 8px;
+      font-size: clamp(30px, 7vw, 44px);
+      line-height: 1.06;
+      letter-spacing: -.04em;
+    }
+
+    .subtitle {
+      margin: 0 auto;
+      max-width: 390px;
+      color: #756a76;
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .buttons-zone {
+      position: relative;
+      width: 100%;
+      height: 170px;
+      margin-top: 22px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 18px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    button:active {
+      transform: scale(.96);
+    }
+
+    #yesBtn {
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      transform: translateX(-115%);
+      width: 132px;
+      height: 58px;
+      color: white;
+      background: linear-gradient(135deg, #ff6e9f, #ee3f78);
+      box-shadow: 0 12px 30px rgba(238, 63, 120, .30);
+    }
+
+    #yesBtn:hover {
+      box-shadow: 0 16px 36px rgba(238, 63, 120, .42);
+    }
+
+    #noBtn {
+      position: absolute;
+      left: calc(50% + 10px);
+      top: 20px;
+      width: 132px;
+      height: 58px;
+      color: #5f5560;
+      background: #f2edf0;
+      box-shadow: 0 10px 24px rgba(72, 48, 62, .10);
+      transition: left .18s ease, top .18s ease, transform .18s ease;
+    }
+
+    .hint {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 8px;
+      font-size: 13px;
+      color: #aa8f9a;
+    }
+
+    .success {
+      display: none;
+      position: absolute;
+      inset: 0;
+      padding: 40px 28px;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,.9), transparent 45%),
+        linear-gradient(145deg, #fff3f8, #ffd7e5);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .success.show {
+      display: flex;
+      animation: reveal .45s cubic-bezier(.2,.9,.2,1);
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: scale(.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .success .emoji {
+      font-size: 104px;
+      animation: celebrate .9s ease-in-out infinite alternate;
+    }
+
+    @keyframes celebrate {
+      from { transform: rotate(-6deg) scale(1); }
+      to   { transform: rotate(6deg) scale(1.08); }
+    }
+
+    .success h2 {
+      margin: 18px 0 8px;
+      font-size: clamp(34px, 8vw, 52px);
+      color: #d92f69;
+    }
+
+    .success p {
+      margin: 0;
+      color: #6f5e68;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .confetti {
+      position: fixed;
+      top: -20px;
+      z-index: 99;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translate3d(var(--drift), 110vh, 0) rotate(720deg);
+        opacity: .2;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .card {
+        min-height: 550px;
+        padding-inline: 18px;
+      }
+
+      .illustration {
+        width: 155px;
+        height: 155px;
+        font-size: 74px;
+      }
+
+      #yesBtn, #noBtn {
+        width: 118px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card" id="card">
+    <div class="badge">💌 我有一个问题想问你</div>
+
+    <!-- 这里可以换成你们的照片：把下面 div 改成 <img src="photo.jpg"> -->
+    <div class="illustration">🥺</div>
+
+    <h1>愿意和我约会吗？</h1>
+    <p class="subtitle">
+      我认真想了很久，还是觉得应该亲口问你。<br>
+      所以……你的答案是？
+    </p>
+
+    <section class="buttons-zone" id="zone">
+      <button id="yesBtn" type="button">当然愿意 💗</button>
+      <button id="noBtn" type="button">不要</button>
+      <div class="hint">提示：第二个按钮好像有自己的想法</div>
+    </section>
+
+    <section class="success" id="success" aria-live="polite">
+      <div class="emoji">🥰</div>
+      <h2>你真的答应了！</h2>
+      <p>
+        那就说定啦 💕<br>
+        时间和地点，我来认真安排。
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const card = document.getElementById("card");
+    const zone = document.getElementById("zone");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const success = document.getElementById("success");
+
+    let dodgeCount = 0;
+
+    function moveNoButton() {
+      const zoneRect = zone.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const padding = 8;
+      const maxX = Math.max(padding, zoneRect.width - btnRect.width - padding);
+      const maxY = Math.max(padding, zoneRect.height - btnRect.height - 30);
+
+      let x = padding + Math.random() * (maxX - padding);
+      let y = padding + Math.random() * (maxY - padding);
+
+      // 尽量别盖住 Yes 按钮所在的中间区域
+      if (y < 85 && x > zoneRect.width * 0.20 && x < zoneRect.width * 0.67) {
+        y = 95 + Math.random() * Math.max(10, maxY - 95);
+      }
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+
+      dodgeCount += 1;
+      const texts = [
+        "不要",
+        "再想想嘛",
+        "你确定？",
+        "真的不选我？",
+        "抓不到我 😝"
+      ];
+      noBtn.textContent = texts[Math.min(dodgeCount, texts.length - 1)];
+
+      // 对方点得越多，Yes 按钮就越大一点
+      const scale = Math.min(1 + dodgeCount * 0.07, 1.45);
+      yesBtn.style.transform = `translateX(-115%) scale(${scale})`;
+    }
+
+    // 电脑：鼠标靠近就逃跑
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      moveNoButton();
+    });
+
+    // 手机：手指接触前/接触时逃跑
+    noBtn.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      moveNoButton();
+    }, { passive: false });
+
+    yesBtn.addEventListener("click", () => {
+      success.classList.add("show");
+      launchConfetti();
+    });
+
+    function launchConfetti() {
+      const pieces = ["💗", "💖", "💕", "✨", "🌸"];
+      for (let i = 0; i < 80; i++) {
+        const item = document.createElement("span");
+        item.className = "confetti";
+        item.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+        item.style.left = `${Math.random() * 100}vw`;
+        item.style.fontSize = `${14 + Math.random() * 20}px`;
+        item.style.animationDuration = `${2.4 + Math.random() * 2.4}s`;
+        item.style.animationDelay = `${Math.random() * 0.7}s`;
+        item.style.setProperty("--drift", `${-100 + Math.random() * 200}px`);
+        document.body.appendChild(item);
+        setTimeout(() => item.remove(), 5600);
+      }
+    }
+
+    // 背景漂浮爱心
+    for (let i = 0; i < 14; i++) {
+      const heart = document.createElement("span");
+      heart.className = "floating-heart";
+      heart.textContent = Math.random() > .5 ? "♡" : "♥";
+      heart.style.left = `${Math.random() * 100}vw`;
+      heart.style.fontSize = `${18 + Math.random() * 34}px`;
+      heart.style.animationDuration = `${8 + Math.random() * 8}s`;
+      heart.style.animationDelay = `${-Math.random() * 12}s`;
+      document.body.appendChild(heart);
+    }
+  </script>
+</body>
+</html>
